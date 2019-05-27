@@ -94,7 +94,9 @@ class DelegateFragment : Fragment(){
 
 
     private fun crop(){
-        val crop = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val crop = if (BuildCompat.isAtLeastQ()){
+            requireContext().filesDir
+        }else {requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)}
         val cropPhoto = File(crop.path, "Crop.jpg")
         try {
             if (cropPhoto.exists()) {

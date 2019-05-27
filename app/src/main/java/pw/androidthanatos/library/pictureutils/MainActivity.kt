@@ -6,6 +6,7 @@ import android.os.Environment
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.os.BuildCompat
 import pw.androidthanatos.library.picutil.ObtainPicture
 import java.io.File
 
@@ -24,12 +25,17 @@ class MainActivity : AppCompatActivity() {
 
 
     fun click(v: View){
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/test/picture.jpg")
+        val file = if (BuildCompat.isAtLeastQ()){
+            File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),"/test/picture.jpg")
+        }else{
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "/test/picture.jpg")
+        }
         if (!file.parentFile.exists()) {
             file.parentFile.mkdirs()
         }
 
-        ObtainPicture.cropPhotoByPicture(this, 100){
+
+        ObtainPicture.cropPhotoByCamera(this, 100, ObtainPicture.getFileUri(file)){
             (v as ImageView).setImageBitmap(it)
         }
     }
